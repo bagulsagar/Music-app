@@ -1,0 +1,141 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user profile for an authenticated BloomeeTunes listener.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the user." },
+        "displayName": { "type": "string", "description": "Public display name shown in collaborative playlists." },
+        "photoUrl": { "type": "string", "description": "Optional avatar URL." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["userId", "displayName", "createdAt", "updatedAt"]
+    },
+    "SavedTrack": {
+      "title": "SavedTrack",
+      "description": "A liked or locally imported track saved in a user's personal library.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "trackId": { "type": "string", "description": "Canonical track identifier." },
+        "title": { "type": "string", "description": "Track title." },
+        "artist": { "type": "string", "description": "Artist name." },
+        "album": { "type": "string", "description": "Album name." },
+        "artworkUrl": { "type": "string", "description": "Album artwork URL." },
+        "streamUrl": { "type": "string", "description": "Audio stream or content URI." },
+        "durationMs": { "type": "integer", "description": "Track duration in milliseconds." },
+        "genre": { "type": "string", "description": "Primary genre." },
+        "sourceType": { "type": "string", "enum": ["stream", "local"], "description": "Track origin." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp when liked." }
+      },
+      "required": ["userId", "trackId", "title", "artist", "album", "artworkUrl", "streamUrl", "durationMs", "genre", "sourceType", "createdAt"]
+    },
+    "HistoryEntry": {
+      "title": "HistoryEntry",
+      "description": "Recently played track record for Smart Playlists (Recently Played / Most Played).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "trackId": { "type": "string", "description": "Canonical track identifier." },
+        "title": { "type": "string", "description": "Track title." },
+        "artist": { "type": "string", "description": "Artist name." },
+        "album": { "type": "string", "description": "Album name." },
+        "artworkUrl": { "type": "string", "description": "Album artwork URL." },
+        "streamUrl": { "type": "string", "description": "Audio stream URI." },
+        "durationMs": { "type": "integer", "description": "Track duration in milliseconds." },
+        "playCount": { "type": "integer", "description": "Total play count for this track." },
+        "playedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of latest play." }
+      },
+      "required": ["userId", "trackId", "title", "artist", "album", "artworkUrl", "streamUrl", "durationMs", "playCount", "playedAt"]
+    },
+    "Playlist": {
+      "title": "Playlist",
+      "description": "Personal or real-time collaborative playlist shared by invite code.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "description": "Creator Firebase Auth UID." },
+        "ownerName": { "type": "string", "description": "Creator display name." },
+        "title": { "type": "string", "description": "Playlist title." },
+        "description": { "type": "string", "description": "Playlist description or vibe note." },
+        "accentColorHex": { "type": "string", "description": "Hex accent color for cover bloom." },
+        "inviteCode": { "type": "string", "description": "6-character alphanumeric invite code." },
+        "isCollaborative": { "type": "boolean", "description": "Whether collaborators can join and contribute." },
+        "memberUids": { "type": "array", "description": "Authorized collaborator UIDs (max 25)." },
+        "memberNames": { "type": "object", "description": "Map of collaborator UID to display name." },
+        "trackIds": { "type": "array", "description": "Ordered list of track item IDs (max 100)." },
+        "trackCount": { "type": "integer", "description": "Number of tracks in playlist." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["ownerId", "ownerName", "title", "description", "accentColorHex", "inviteCode", "isCollaborative", "memberUids", "memberNames", "trackIds", "trackCount", "createdAt", "updatedAt"]
+    },
+    "PlaylistInvite": {
+      "title": "PlaylistInvite",
+      "description": "Secret invite-code lookup document enabling join-by-code without listing playlists.",
+      "type": "object",
+      "properties": {
+        "inviteCode": { "type": "string", "description": "Invite code matching document ID." },
+        "playlistId": { "type": "string", "description": "Target playlist document ID." },
+        "playlistTitle": { "type": "string", "description": "Title preview shown before joining." },
+        "ownerId": { "type": "string", "description": "Owner UID." },
+        "ownerName": { "type": "string", "description": "Owner display name." },
+        "isActive": { "type": "boolean", "description": "Whether invites are currently accepted." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." }
+      },
+      "required": ["inviteCode", "playlistId", "playlistTitle", "ownerId", "ownerName", "isActive", "createdAt"]
+    },
+    "PlaylistTrack": {
+      "title": "PlaylistTrack",
+      "description": "A track contributed to a playlist with attribution and collaborative upvotes.",
+      "type": "object",
+      "properties": {
+        "playlistId": { "type": "string", "description": "Parent playlist ID." },
+        "trackId": { "type": "string", "description": "Canonical track ID." },
+        "title": { "type": "string", "description": "Track title." },
+        "artist": { "type": "string", "description": "Artist name." },
+        "album": { "type": "string", "description": "Album name." },
+        "artworkUrl": { "type": "string", "description": "Artwork URL." },
+        "streamUrl": { "type": "string", "description": "Audio stream URI." },
+        "durationMs": { "type": "integer", "description": "Track duration in milliseconds." },
+        "genre": { "type": "string", "description": "Genre." },
+        "addedByUid": { "type": "string", "description": "Contributor UID." },
+        "addedByName": { "type": "string", "description": "Contributor display name." },
+        "upvotedBy": { "type": "array", "description": "List of collaborator UIDs who upvoted this track." },
+        "upvoteCount": { "type": "integer", "description": "Count of upvotes." },
+        "orderIndex": { "type": "integer", "description": "Sort order index." },
+        "memberUids": { "type": "array", "description": "Denormalized memberUids for list rule enforcement." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp when added." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["playlistId", "trackId", "title", "artist", "album", "artworkUrl", "streamUrl", "durationMs", "genre", "addedByUid", "addedByName", "upvotedBy", "upvoteCount", "orderIndex", "memberUids", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Authenticated user profile isolated per UID."
+    },
+    "/users/{userId}/liked_tracks/{trackId}": {
+      "schema": { "$ref": "#/entities/SavedTrack" },
+      "description": "User's liked and imported library tracks."
+    },
+    "/users/{userId}/history/{historyId}": {
+      "schema": { "$ref": "#/entities/HistoryEntry" },
+      "description": "User's listening history and play counts."
+    },
+    "/playlists/{playlistId}": {
+      "schema": { "$ref": "#/entities/Playlist" },
+      "description": "Collaborative and solo playlists scoped to memberUids."
+    },
+    "/playlist_invites/{inviteCode}": {
+      "schema": { "$ref": "#/entities/PlaylistInvite" },
+      "description": "Invite code lookup for joining collaborative playlists."
+    },
+    "/playlists/{playlistId}/tracks/{trackItemId}": {
+      "schema": { "$ref": "#/entities/PlaylistTrack" },
+      "description": "Collaborative tracks inside a playlist with attribution and upvotes."
+    }
+  }
+}
